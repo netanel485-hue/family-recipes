@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מתכוני המשפחה · Family Recipes</title>
+<meta name="description" content="כל המתכונים של המשפחה במקום אחד · Our family recipes in one place">
+<meta name="theme-color" content="#a8321f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="מתכונים">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="#/" aria-label="Home"><span class="brand-mark">🍲</span><span class="brand-text"><b data-i18n="siteName">מתכוני המשפחה</b><small data-i18n="tagline">מהמחברת והקלסר – לכל דור</small></span></a>
+    <div class="top-actions">
+      <button id="randomBtn" class="icon-btn" data-i18n-title="surprise" title="הפתיעו אותי">🎲</button>
+      <button id="favToggle" class="icon-btn" aria-pressed="false" data-i18n-title="favs" title="מועדפים">♡</button>
+      <button id="langBtn" class="lang-btn" aria-label="Language">EN</button>
+    </div>
+  </div>
+  <div class="search-row">
+    <input id="q" type="search" autocomplete="off" enterkeyhint="search" data-i18n-ph="searchPh" placeholder="חיפוש מתכון או מרכיב… (עברית או English)">
+  </div>
+</header>
+
+<main id="app" tabindex="-1"></main>
+
+<footer class="foot">
+  <span data-i18n="footer">נבנה באהבה ממתכוני המשפחה · הצילומים הם הכרטיסים המקוריים</span>
+</footer>
+
+<div id="lightbox" class="lightbox" hidden>
+  <button class="lb-close" aria-label="Close">✕</button>
+  <div class="lb-stage"><img id="lbImg" alt=""></div>
+  <div class="lb-nav"><button id="lbPrev">‹</button><span id="lbCount"></span><button id="lbNext">›</button></div>
+</div>
+
+<script src="recipes-1.js"></script>
+<script src="recipes-2.js"></script>
+<script src="recipes-3.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
