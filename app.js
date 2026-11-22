@@ -26,7 +26,11 @@ const T = {
   gSearch:'חיפוש בגוגל',yt:'סרטונים ביוטיוב',pin:'תמונות והשראה',
   siteSearchNote:'הקישורים פותחים חיפוש באינטרנט – לא מתכונים שנבדקו על ידינו.',
   favEmpty:'עוד לא שמרתם מועדפים',favEmptyHint:'לחצו על ♡ בתוך מתכון כדי לשמור אותו כאן.',
-  favTitle:'המועדפים שלי',back:'חזרה',clear:'נקה חיפוש',of:'מתוך',viewing:'מציג'},
+  favTitle:'המועדפים שלי',back:'חזרה',clear:'נקה חיפוש',of:'מתוך',viewing:'מציג',
+  scale:'כמות',scaleNote:'הכמויות מחושבות אוטומטית – כדאי לבדוק מול הכרטיס, במיוחד בתבשילים ואפייה.',
+  shop:'רשימת קניות',addShop:'הוסיפו לרשימת קניות',inShop:'ברשימה ✓',shopTitle:'רשימת הקניות שלי',
+  shopEmpty:'הרשימה ריקה',shopEmptyHint:'בתוך מתכון לחצו על "הוסיפו לרשימת קניות" – הכמויות יתווספו לפי הכמות שבחרתם.',
+  copyList:'העתקת הרשימה',clearDone:'הסרת מסומנים',clearAll:'ריקון הרשימה',removeR:'הסרה',added:'נוסף לרשימה',confirmClear:'לרוקן את כל הרשימה?',openR:'פתיחת המתכון'},
  en:{siteName:'Family Recipes',tagline:'From our notebook & binder – for every generation',searchPh:'Search a recipe or ingredient… (English or עברית)',
   surprise:'Surprise me',favs:'Favorites',footer:'Made with love from our family recipes · photos are the original cards',
   all:'All',recipes:'recipes',categories:'Categories',results:'results',noRes:'Nothing found',noResHint:'Try another word, or search by ingredient (e.g. chocolate, עוף, garlic).',
@@ -39,8 +43,53 @@ const T = {
   gSearch:'Search Google',yt:'Videos on YouTube',pin:'Photos & inspiration',
   siteSearchNote:'These links open a web search – they are not recipes we have tested.',
   favEmpty:'No favorites yet',favEmptyHint:'Tap ♡ inside a recipe to keep it here.',
-  favTitle:'My favorites',back:'Back',clear:'Clear search',of:'of',viewing:'Showing'}
+  favTitle:'My favorites',back:'Back',clear:'Clear search',of:'of',viewing:'Showing',
+  scale:'Amount',scaleNote:'Amounts are scaled automatically – double-check against the card, especially for baking.',
+  shop:'Shopping list',addShop:'Add to shopping list',inShop:'On the list ✓',shopTitle:'My shopping list',
+  shopEmpty:'The list is empty',shopEmptyHint:'Open a recipe and tap "Add to shopping list" – amounts follow the scale you picked.',
+  copyList:'Copy list',clearDone:'Remove checked',clearAll:'Clear list',removeR:'Remove',added:'Added to the list',confirmClear:'Clear the whole list?',openR:'Open recipe'}
 };
+
+/* ---------- scaling ---------- */
+const UF = {'½':.5,'¼':.25,'¾':.75,'⅓':1/3,'⅔':2/3,'⅛':.125,'⅜':.375};
+const HW = {'שלושה רבעי':.75,'שני שליש':2/3,'חצי':.5,'רבע':.25,'שליש':1/3,'שמינית':.125};
+const FR = [[0,''],[.125,'⅛'],[.25,'¼'],[1/3,'⅓'],[.375,'⅜'],[.5,'½'],[.625,'⅝'],[2/3,'⅔'],[.75,'¾'],[.875,'⅞'],[1,'']];
+const PLUR = { // [singular, plural]
+  he:[['כוס','כוסות'],['כף','כפות'],['כפית','כפיות'],['ביצה','ביצים'],['עגבנייה','עגבניות'],['בצל','בצלים'],['גזר','גזרים'],['חצילים','חצילים'],['בננה','בננות'],['שן','שיני'],['חבילה','חבילות'],['שקית','שקיות']],
+  en:[['cup','cups'],['egg','eggs'],['clove','cloves'],['potato','potatoes'],['onion','onions'],['tomato','tomatoes'],['banana','bananas'],['carrot','carrots'],['eggplant','eggplants'],['pack','packs'],['packet','packets'],['stalk','stalks'],['apple','apples'],['stick','sticks'],['bag','bags'],['can','cans']]
+};
+function fmtQty(v){
+  if(v>=10) return String(Math.round(v*(v>=100?1:10))/(v>=100?1:10));
+  const w=Math.floor(v+1e-9); const f=v-w; let best=FR[0],d=9;
+  for(const p of FR){const dd=Math.abs(f-p[0]); if(dd<d){d=dd;best=p}}
+  let whole=w, sym=best[1]; if(best[0]===1){whole=w+1;sym=''}
+  if(!whole && !sym) return '⅛';
+  return (whole?whole:'')+sym;
+}
+function scaleIng(str, m, lg){
+  if(m===1) return str;
+  if(lg==='he') str=str.replace(/^(כוס|כף|כפית|שקית|חבילת|קופסת|קילו)(?=\s)/,'1 $1'); // implied "1"
+  const re=/(\d+)\s*([½¼¾⅓⅔⅛⅜])|(\d+)\s+(\d+)\/(\d+)|(\d+)\/(\d+)|(\d+(?:\.\d+)?)|([½¼¾⅓⅔⅛⅜])|(?:^|(?<=[\s:(]))(שלושה רבעי|שני שליש|חצי|רבע|שליש|שמינית)(?=\s)/gu;
+  return str.replace(re,(mt,a1,a2,b1,b2,b3,c1,c2,d1,e1,h,off,s)=>{
+    const before=s.slice(0,off), after=s.slice(off+mt.length);
+    if(/[×x#]\s*$/.test(before)||/(was|מספר|Group|קבוצה)\s*$/i.test(before)||/^\s*[:)°]/.test(after)||/^[x×]/.test(after)||/\d$/.test(before.replace(/\s+$/,''))&&/^\s*\//.test(after)) return mt;
+    if(/^\s*(?:ס"מ|cm|°|hours?|hrs?|minutes?|mins?|שעות|שעה|דקות|דקה)/i.test(after)) return mt; // never scale times/sizes
+    let v;
+    if(a1!==undefined) v=+a1+UF[a2]; else if(b1!==undefined) v=+b1+(+b2)/(+b3);
+    else if(c1!==undefined) v=(+c1)/(+c2); else if(d1!==undefined) v=parseFloat(d1);
+    else if(e1!==undefined) v=UF[e1]; else v=HW[h];
+    const nv=v*m; let out=fmtQty(nv);
+    // fix noun number agreement for the word right after the number
+    const wm=after.match(/^(\s+)([^\s,.;:()]+)/);
+    let tail='';
+    if(wm){ const word=wm[2]; for(const [sg,pl] of PLUR[lg]){
+        const plural = nv>1.001;
+        if(word===sg && plural){tail=wm[1]+pl;break}
+        if(word===pl && !plural){tail=wm[1]+sg;break} }
+      if(tail){ return out+'\u0000'+tail+'\u0001'; } }
+    return out;
+  }).replace(/\u0000([^\u0001]*)\u0001(\s*[^\s,.;:()]+)?/g,(x,t)=>t).replace(/\u0001/g,'');
+}
 
 /* ---------- state ---------- */
 const store = {
@@ -172,11 +221,42 @@ function familyRelated(r){
   return html;
 }
 
+const MULTS=[[0.5,'½×'],[1,'1×'],[1.5,'1½×'],[2,'2×'],[3,'3×'],[4,'4×']];
+let recipeId=null, savedMult=1;
+
+/* ---------- shopping list ---------- */
+let cart = store.get('cart', []);          // [{id, m, done:[idx]}]
+const saveCart = ()=>{store.set('cart',cart); syncShopBtn()};
+const inCart = id => cart.some(c=>c.id===id);
+function addToCart(id,m){ const e=cart.find(c=>c.id===id); if(e){e.m=m;e.done=[]} else cart.push({id,m,done:[]}); saveCart(); }
+function syncShopBtn(){ const b=$('#shopBtn'); if(!b) return; b.dataset.n = cart.length||''; b.setAttribute('aria-pressed', location.hash==='#/shop'); }
+function cartText(){
+  return cart.map(c=>{const r=R.find(x=>x.id===c.id); if(!r) return ''; const ing=r.ing[lang]||r.ing.he;
+    return L(r.title)+(c.m!==1?' ('+(MULTS.find(x=>x[0]===c.m)||[0,'×'+c.m])[1]+')':'')+'\n'+ing.map((x,i)=>(c.done.includes(i)?'✓ ':'• ')+scaleIng(x,c.m,lang)).join('\n')}).filter(Boolean).join('\n\n');
+}
+function viewShop(){
+  if(!cart.length){ app.innerHTML=`<div class="section-title"><h2>🛒 ${t('shopTitle')}</h2></div><div class="empty"><b>${t('shopEmpty')}</b>${t('shopEmptyHint')}</div>`; return; }
+  app.innerHTML = `<div class="section-title"><h2>🛒 ${t('shopTitle')}</h2><span>${cart.length} ${t('recipes')}</span></div>
+   <div class="actions"><button class="btn primary" id="cpList">📋 ${t('copyList')}</button><button class="btn" id="shList">↗ ${t('share')}</button><button class="btn" id="rmDone">${t('clearDone')}</button><button class="btn" id="rmAll">${t('clearAll')}</button></div>
+   <div class="shop">${cart.map((c,ci)=>{const r=R.find(x=>x.id===c.id); if(!r) return ''; const ing=r.ing[lang]||r.ing.he;
+     return `<div class="panel"><div class="shop-head"><h2>${r._cat.e} ${esc(L(r.title))} ${c.m!==1?`<span class="pill">${(MULTS.find(x=>x[0]===c.m)||[0,'×'+c.m])[1]}</span>`:''}</h2>
+       <span><a class="btn" href="#/r/${r.id}">${t('openR')}</a> <button class="btn" data-rm="${ci}">✕ ${t('removeR')}</button></span></div>
+       <ul class="ing">${ing.map((x,i)=>`<li><input type="checkbox" id="s${ci}_${i}" data-c="${ci}" data-i="${i}" ${c.done.includes(i)?'checked':''}><label for="s${ci}_${i}">${esc(scaleIng(x,c.m,lang))}</label></li>`).join('')}</ul></div>`}).join('')}</div>
+   <p class="hint">${t('scaleNote')}</p>`;
+  app.querySelectorAll('.shop .ing input').forEach(cb=>cb.onchange=()=>{const c=cart[+cb.dataset.c],i=+cb.dataset.i; c.done=c.done.filter(x=>x!==i); if(cb.checked)c.done.push(i); saveCart()});
+  app.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.rm,1);saveCart();viewShop()});
+  $('#cpList').onclick=async()=>{try{await navigator.clipboard.writeText(cartText());toast(t('copied'))}catch(e){}};
+  $('#shList').onclick=async()=>{try{if(navigator.share)await navigator.share({title:t('shopTitle'),text:cartText()});else{await navigator.clipboard.writeText(cartText());toast(t('copied'))}}catch(e){}};
+  $('#rmDone').onclick=()=>{cart.forEach(c=>{c.done=[]}); /* clear check marks */ saveCart(); viewShop()};
+  $('#rmAll').onclick=()=>{ if(confirm(t('confirmClear'))){cart=[];saveCart();viewShop()} };
+}
+
 let currentPhotos=[], lbIdx=0;
 function viewRecipe(id){
   const r=R.find(x=>x.id===id); if(!r) return viewHome();
   const cat=r._cat, ing=r.ing[lang]||r.ing.he, steps=(r.steps&&(r.steps[lang]||r.steps.he))||[];
   const checked = new Set(store.get('chk:'+id,[]));
+  let mult = recipeId===id ? savedMult : 1; recipeId=id; savedMult=mult;
   const serves = r.serves ? (typeof r.serves==='string'?r.serves:L(r.serves)) : '';
   currentPhotos = r.photos.map(p=>'img/'+p+'.jpg');
   document.title = L(r.title)+' · '+t('siteName');
@@ -186,6 +266,7 @@ function viewRecipe(id){
     <div class="meta"><span class="pill">${esc(L(cat))}</span><span class="pill alt">${esc(srcLabel(r))}</span>${serves?`<span class="pill alt">${t('serves')}: ${esc(serves)}</span>`:''}${r.credit?`<span class="pill alt">${t('credit')}: ${esc(r.credit)}</span>`:''}</div></div></div>
   <div class="actions">
     <button class="btn primary" id="favBtn" aria-pressed="${favs.has(id)}">${favs.has(id)?'♥ '+t('faved'):'♡ '+t('fav')}</button>
+    <button class="btn" id="shopAdd">🛒 ${inCart(id)?t('inShop'):t('addShop')}</button>
     <button class="btn" id="cookBtn" aria-pressed="false">👩‍🍳 ${t('cook')}</button>
     <button class="btn" id="copyBtn">📋 ${t('copy')}</button>
     <button class="btn" id="shareBtn">↗ ${t('share')}</button>
@@ -193,7 +274,9 @@ function viewRecipe(id){
   </div>
   <div class="detail">
    <div class="col-side">
-    <div class="panel"><h2>🧺 ${t('ingredients')}</h2><ul class="ing">${ing.map((x,i)=>`<li><input type="checkbox" id="i${i}" data-i="${i}" ${checked.has(i)?'checked':''}><label for="i${i}">${esc(x)}</label></li>`).join('')}</ul></div>
+    <div class="panel"><h2>🧺 ${t('ingredients')}</h2>
+      <div class="scalebar" role="group" aria-label="${esc(t('scale'))}"><span>${t('scale')}:</span>${MULTS.map(x=>`<button data-m="${x[0]}" aria-pressed="${x[0]===mult}">${x[1]}</button>`).join('')}</div>
+      <ul class="ing" id="ingList"></ul><p class="hint" id="scaleHint" hidden>${t('scaleNote')}</p></div>
     <div class="panel photos-panel"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="lazy"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>
    </div>
    <div class="col-main">
@@ -210,14 +293,23 @@ function viewRecipe(id){
   // handlers
   $('#favBtn').onclick=()=>{ favs.has(id)?favs.delete(id):favs.add(id); saveFavs(); viewRecipe(id); syncFavBtn(); };
   $('#printBtn').onclick=()=>window.print();
-  $('#copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(L(r.title)+'\n\n'+ing.map(x=>'• '+x).join('\n'));toast(t('copied'))}catch(e){}};
+  const scaled=()=>ing.map(x=>scaleIng(x,mult,lang));
+  function drawIng(){
+    $('#ingList').innerHTML = scaled().map((x,i)=>`<li><input type="checkbox" id="i${i}" data-i="${i}" ${checked.has(i)?'checked':''}><label for="i${i}">${esc(x)}</label></li>`).join('');
+    $('#scaleHint').hidden = mult===1;
+    app.querySelectorAll('.scalebar button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.m===mult));
+    app.querySelectorAll('.ing input').forEach(cb=>cb.onchange=()=>{const i=+cb.dataset.i;cb.checked?checked.add(i):checked.delete(i);store.set('chk:'+id,[...checked])});
+  }
+  drawIng();
+  app.querySelectorAll('.scalebar button').forEach(b=>b.onclick=()=>{mult=+b.dataset.m;savedMult=mult;drawIng()});
+  $('#shopAdd').onclick=()=>{addToCart(id,mult);$('#shopAdd').textContent='🛒 '+t('inShop');toast(t('added'))};
+  $('#copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(L(r.title)+'\n\n'+scaled().map(x=>'• '+x).join('\n'));toast(t('copied'))}catch(e){}};
   $('#shareBtn').onclick=async()=>{const data={title:L(r.title),url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);toast(t('copied'))}}catch(e){}};
   let wl=null;
   $('#cookBtn').onclick=async(e)=>{
     const on=document.body.classList.toggle('cooking'); e.currentTarget.setAttribute('aria-pressed',on);
     try{ if(on && 'wakeLock' in navigator){wl=await navigator.wakeLock.request('screen'); toast(t('cookOn'))} else if(wl){await wl.release();wl=null} }catch(err){}
   };
-  app.querySelectorAll('.ing input').forEach(cb=>cb.onchange=()=>{const s=new Set(store.get('chk:'+id,[]));const i=+cb.dataset.i;cb.checked?s.add(i):s.delete(i);store.set('chk:'+id,[...s])});
   app.querySelectorAll('[data-photo]').forEach(b=>b.onclick=()=>openLB(+b.dataset.photo));
 }
 
@@ -227,11 +319,12 @@ function render(){
   const h = location.hash || '#/';
   const m = h.match(/^#\/(c|r)\/(.+)$/);
   if(h==='#/fav') viewFavs();
+  else if(h==='#/shop') viewShop();
   else if(m && m[1]==='r') viewRecipe(decodeURIComponent(m[2]));
   else if(m && m[1]==='c') viewCat(decodeURIComponent(m[2]));
   else viewHome();
   if(!(m&&m[1]==='r')) document.title = t('siteName')+' · '+(lang==='he'?'Family Recipes':'מתכוני המשפחה');
-  syncFavBtn();
+  syncFavBtn(); syncShopBtn();
 }
 function syncFavBtn(){const b=$('#favToggle'); const on=location.hash==='#/fav'; b.setAttribute('aria-pressed',on); b.textContent = favs.size?'♥':'♡'}
 
@@ -242,6 +335,7 @@ document.addEventListener('click',e=>{
 window.addEventListener('hashchange',render);
 $('#langBtn').onclick=()=>setLang(lang==='he'?'en':'he');
 $('#favToggle').onclick=()=>{location.hash = location.hash==='#/fav' ? '#/' : '#/fav'};
+$('#shopBtn').onclick=()=>{location.hash = location.hash==='#/shop' ? '#/' : '#/shop'};
 $('#randomBtn').onclick=()=>{const r=R[Math.floor(Math.random()*R.length)]; location.hash='#/r/'+r.id};
 let tm; $('#q').addEventListener('input',e=>{
   clearTimeout(tm); tm=setTimeout(()=>{ q=e.target.value; const h=location.hash;
