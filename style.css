@@ -195,3 +195,11 @@ body.cooking .ing li,body.cooking .steps li{font-size:21px}
 .dish-h{font-size:16px;margin:12px 0 2px;font-family:inherit}
 .t-row{padding:8px 0;border-top:1px dashed var(--line)}.t-row a{font-weight:600;text-decoration:none;color:var(--ink)}
 @media print{.tabs,.plan-head,.plan-banner,.picker,.sec-head button,.btn.x{display:none!important}}
+
+/* original card photo up top */
+.photos-top{margin-bottom:16px}
+.photos-top .photos{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.photos-top .photos button{aspect-ratio:4/3}
+.tile-e{position:absolute;bottom:8px;inset-inline-start:8px;font-size:22px;background:var(--surface);border-radius:10px;padding:2px 7px;box-shadow:var(--shadow)}
+.thumb{font-size:0}
+.thumb img{object-position:50% 55%}

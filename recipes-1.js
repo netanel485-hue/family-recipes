@@ -15,10 +15,11 @@ window.RECIPES.push(
 { id:'matbucha', cat:'starter', src:'A', photos:['6551','6552'], tags:['salad','dip','tomato'],
   title:{he:'מטבוחה', en:'Matbucha (Cooked Tomato Salad)'},
   ing:{
-   en:['10 tomatoes (about 1 kg)','5–6 cloves garlic, crushed','Hot red pepper(s) – grilled (see card)','1/2 cup oil','1 tbsp paprika','2 tbsp sugar','1/4 tsp pepper','1 tsp salt'],
-   he:['10 עגבניות (כקילו)','5–6 שיני שום כתושות','פלפל חריף אדום – צלוי (ראו כרטיס)','חצי כוס שמן','כף פפריקה','2 כפות סוכר','רבע כפית פלפל','כפית מלח']},
+   en:['10 tomatoes (about 1 kg)','5–6 cloves garlic, crushed','3 peppers (the Hebrew word on the card is just "peppers"; type/colour not stated) – to be grilled','1/2 cup oil','1 tbsp paprika','2 tbsp sugar','1/4 tsp pepper','1 tsp salt'],
+   he:['10 עגבניות (כקילו)','5–6 שיני שום כתושות','3 פלפלים (בכרטיס כתוב רק "פלפלים", בלי סוג או צבע) – לצלייה','חצי כוס שמן','כף פפריקה','2 כפות סוכר','רבע כפית פלפל','כפית מלח']},
+  note:{he:'תוקן לפי הכרטיס: 3 פלפלים (קודם נכתב בטעות "פלפל חריף").', en:'Corrected from the card: 3 peppers (earlier mis-transcribed as "hot pepper").'},
   steps:{
-   en:['Grill the peppers, then rest them in a bowl covered with plastic wrap.','Cut an X in the bottom of each tomato, place in a bowl, pour boiling water over and wait 5 minutes. Peel and chop.','Lightly sauté the garlic in a pot, then add the tomatoes. When it boils, lower the heat.','Cook about 1 hour, until almost all the liquid has evaporated.','Add the remaining ingredients and cook on low another ~1.5 hours.'],
+   en:['Grill the peppers, then let them rest in a bowl covered in plastic wrap.','Cut an X in the bottom of each tomato, place in a bowl, pour boiling water over and wait 5 minutes. Peel and chop.','Lightly sauté the garlic in a pot, then add the tomatoes. When it boils, lower the heat.','Cook about 1 hour, until almost all the liquid has evaporated.','Add the remaining ingredients and cook on low another ~1.5 hours.'],
    he:['לצלות את הפלפלים ולהניח בקערה מכוסה בניילון נצמד.','לחרוץ X בתחתית העגבניות, להניח בקערה, לשפוך מים רותחים ולהמתין 5 דקות. לקלף ולחתוך.','לטגן קלות את השום בסיר, להוסיף את העגבניות. כשמגיע לרתיחה להנמיך אש.','לבשל כשעה, עד שכמעט כל הנוזלים התאדו.','להוסיף את שאר המרכיבים ולבשל על להבה נמוכה עוד כשעה וחצי.']},
   tw:[['שקשוקה','shakshuka'],['סלט עגבניות קלוי','roasted tomato salad'],['פלפלים צלויים בשמן זית','roasted peppers in olive oil']] },
 

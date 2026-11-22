@@ -147,7 +147,7 @@ const srcLabel = r => r.src==='A'?t('binderA'):t('binderB');
 
 function card(r){
   const cat=r._cat;
-  const thumb = r.dish ? `<img src="${esc(r.dish)}" alt="" loading="lazy">` : cat.e;
+  const thumb = `<img src="img/${r.photos[0]}.jpg" alt="" loading="lazy"><span class="tile-e">${cat.e}</span>`;
   return `<a class="card" href="#/r/${r.id}">
     <div class="thumb" style="background:var(${cat.c})">${thumb}${favs.has(r.id)?'<span class="fav-dot" aria-hidden="true">♥</span>':''}</div>
     <div class="card-body"><h3>${esc(L(r.title))}</h3>
@@ -273,12 +273,13 @@ function viewRecipe(id){
     <button class="btn" id="shareBtn">↗ ${t('share')}</button>
     <button class="btn" id="printBtn">🖨 ${t('print')}</button>
   </div>
+  <div class="panel photos-panel photos-top"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="eager"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>
   <div class="detail">
    <div class="col-side">
     <div class="panel"><h2>🧺 ${t('ingredients')}</h2>
       <div class="scalebar" role="group" aria-label="${esc(t('scale'))}"><span>${t('scale')}:</span>${MULTS.map(x=>`<button data-m="${x[0]}" aria-pressed="${x[0]===mult}">${x[1]}</button>`).join('')}</div>
       <ul class="ing" id="ingList"></ul><p class="hint" id="scaleHint" hidden>${t('scaleNote')}</p></div>
-    <div class="panel photos-panel"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="lazy"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>
+</div>
    </div>
    <div class="col-main">
     <div class="panel"><h2>👩‍🍳 ${t('method')}</h2>
