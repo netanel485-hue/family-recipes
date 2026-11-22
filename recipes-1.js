@@ -15,9 +15,9 @@ window.RECIPES.push(
 { id:'matbucha', cat:'starter', src:'A', photos:['6551','6552'], tags:['salad','dip','tomato'],
   title:{he:'מטבוחה', en:'Matbucha (Cooked Tomato Salad)'},
   ing:{
-   en:['10 tomatoes (about 1 kg)','5–6 cloves garlic, crushed','3 peppers (the Hebrew word on the card is just "peppers"; type/colour not stated) – to be grilled','1/2 cup oil','1 tbsp paprika','2 tbsp sugar','1/4 tsp pepper','1 tsp salt'],
-   he:['10 עגבניות (כקילו)','5–6 שיני שום כתושות','3 פלפלים (בכרטיס כתוב רק "פלפלים", בלי סוג או צבע) – לצלייה','חצי כוס שמן','כף פפריקה','2 כפות סוכר','רבע כפית פלפל','כפית מלח']},
-  note:{he:'תוקן לפי הכרטיס: 3 פלפלים (קודם נכתב בטעות "פלפל חריף").', en:'Corrected from the card: 3 peppers (earlier mis-transcribed as "hot pepper").'},
+   en:['10 tomatoes (about 1 kg)','5–6 cloves garlic, crushed','3 peppers – to be grilled','Hot pepper (amount not stated)','1/2 cup oil','1 tbsp paprika','2 tbsp sugar','1/4 tsp pepper','1 tsp salt'],
+   he:['10 עגבניות (כקילו)','5–6 שיני שום כתושות','3 פלפלים – לצלייה','פלפל חריף (הכמות לא כתובה)','חצי כוס שמן','כף פפריקה','2 כפות סוכר','רבע כפית פלפל','כפית מלח']},
+  note:{he:'תוקן לפי הכרטיס ולפי המשפחה: 3 פלפלים וגם פלפל חריף.', en:'Corrected per the card and the family: 3 peppers and also a hot pepper.'},
   steps:{
    en:['Grill the peppers, then let them rest in a bowl covered in plastic wrap.','Cut an X in the bottom of each tomato, place in a bowl, pour boiling water over and wait 5 minutes. Peel and chop.','Lightly sauté the garlic in a pot, then add the tomatoes. When it boils, lower the heat.','Cook about 1 hour, until almost all the liquid has evaporated.','Add the remaining ingredients and cook on low another ~1.5 hours.'],
    he:['לצלות את הפלפלים ולהניח בקערה מכוסה בניילון נצמד.','לחרוץ X בתחתית העגבניות, להניח בקערה, לשפוך מים רותחים ולהמתין 5 דקות. לקלף ולחתוך.','לטגן קלות את השום בסיר, להוסיף את העגבניות. כשמגיע לרתיחה להנמיך אש.','לבשל כשעה, עד שכמעט כל הנוזלים התאדו.','להוסיף את שאר המרכיבים ולבשל על להבה נמוכה עוד כשעה וחצי.']},
@@ -80,8 +80,8 @@ window.RECIPES.push(
 { id:'red-chicken', cat:'main', src:'A', photos:['6557'], tags:['chicken','stovetop'],
   title:{he:'עוף אדום על הכיריים', en:'Red Chicken on the Stove'},
   ing:{
-   en:['1 chicken (about 1 kg drumsticks)','1 small/medium onion (if adding another veggie) or 2 onions (if only onions)','1 can tomato paste','1 tbsp paprika','1 tsp kosher salt','Pepper','1 tbsp brown sugar','3–3.5 cups water (start with 3)','Rub: salt, paprika, pepper, garlic powder','Optional: 4 artichokes, quartered, or potatoes'],
-   he:['עוף אחד (כקילו שוקיים)','בצל קטן/בינוני אחד (אם מוסיפים ירק נוסף) או 2 בצלים (אם רק בצל)','קופסת רסק עגבניות','כף פפריקה','כפית מלח גס','פלפל','כף סוכר חום','3–3.5 כוסות מים (להתחיל ב-3)','לתיבול העוף: מלח, פפריקה, פלפל, אבקת שום','אופציונלי: 4 ארטישוקים מרובעים או תפוחי אדמה']},
+   en:['1 kg chicken drumsticks','1 small/medium onion (if adding another veggie) or 2 onions (if only onions)','1 tomato paste (the card says just "1 רסק")','1 tbsp paprika','1 tsp kosher salt','Pepper','1 tbsp brown sugar','3–3.5 cups water (start with 3)','Rub: salt, paprika, pepper, garlic powder','Optional: 4 artichokes, quartered, or potatoes'],
+   he:['קילו שוקי עוף','בצל קטן/בינוני אחד (אם מוסיפים ירק נוסף) או 2 בצלים (אם רק בצל)','1 רסק (כך כתוב בכרטיס)','כף פפריקה','כפית מלח גס','פלפל','כף סוכר חום','3–3.5 כוסות מים (להתחיל ב-3)','לתיבול העוף: מלח, פפריקה, פלפל, אבקת שום','אופציונלי: 4 ארטישוקים מרובעים או תפוחי אדמה']},
   steps:{
    en:['Brown the chicken, then remove it from the pot.','Sauté the onion.','Add the tomato paste, paprika, salt, pepper, brown sugar and water (start with 3 cups, add more later if needed).','Rub the chicken with salt, paprika, pepper and garlic powder.','Return the chicken to the pot. If using a vegetable, add the quartered artichokes or potatoes.','Cook on low about 1 hour.'],
    he:['לצרוב את העוף ולהוציא מהסיר.','לטגן את הבצל.','להוסיף רסק, פפריקה, מלח, פלפל, סוכר חום ומים (להתחיל ב-3 כוסות ולהוסיף אחר כך אם צריך).','לתבל את העוף במלח, פפריקה, פלפל ואבקת שום.','להחזיר את העוף לסיר. אם מוסיפים ירק – להוסיף ארטישוקים מרובעים או תפוחי אדמה.','לבשל על להבה נמוכה כשעה.']},
@@ -116,8 +116,8 @@ window.RECIPES.push(
    en:['8–10 pargiyot (boneless chicken thighs)','3 big onions, chopped small','Salt, pepper, lots of paprika','A bit of turmeric (as written in Hebrew on the card)','3–4 tbsp canola oil','4 tbsp honey'],
    he:['8–10 פרגיות','3 בצלים גדולים קצוצים דק','מלח, פלפל, הרבה פפריקה','מעט כורכום','3–4 כפות שמן קנולה','4 כפות דבש']},
   steps:{
-   en:['Mix all the ingredients except the chicken.','Pour about 1/3 of the mixture into a pan.','Dip each piece of chicken in the mixture and place in the pan. Pour the rest of the sauce over the chicken.','Let it sit in the liquid in the fridge.','Put in the oven 15 minutes on high, uncovered. Then cover and cook for 1/2 hour (the card also says about 1 hour in total).','Uncover at the end to brown the chicken.'],
-   he:['לערבב את כל המרכיבים חוץ מהעוף.','לשפוך כשליש מהתערובת לתבנית.','לטבול כל חתיכת עוף בתערובת ולסדר בתבנית. לשפוך את שאר הרוטב מעל.','להשאיר לשהות בנוזל במקרר.','להכניס לתנור 15 דקות על חום גבוה, בלי כיסוי. אחר כך לכסות ולבשל חצי שעה (בכרטיס כתוב גם כשעה בסך הכול).','בסוף לגלות כדי שהעוף יזהיב.']},
+   en:['Mix all the ingredients except the chicken.','Pour about 1/3 of the mixture into a pan.','Dip each piece of chicken in the mixture and place in the pan. Pour the rest of the sauce over the chicken.','Let it sit in the liquid in the fridge.','Put in the oven 15 minutes on high, uncovered. Then cover and cook for 1/2 hour.','Uncover at the end to brown the chicken.'],
+   he:['לערבב את כל המרכיבים חוץ מהעוף.','לשפוך כשליש מהתערובת לתבנית.','לטבול כל חתיכת עוף בתערובת ולסדר בתבנית. לשפוך את שאר הרוטב מעל.','להשאיר לשהות בנוזל במקרר.','להכניס לתנור 15 דקות על חום גבוה, בלי כיסוי. אחר כך לכסות ולבשל חצי שעה.','בסוף לגלות כדי שהעוף יזהיב.']},
   note:{he:'הכרטיס בעברית; שם המתכון נקרא בקושי – בדקו מול הצילום.', en:'Card is in Hebrew; the title was hard to read – check against the photo.'} },
 
 { id:'tuscana-chicken', cat:'main', src:'B', photos:['6599'], tags:['chicken','spice'],
@@ -173,8 +173,8 @@ window.RECIPES.push(
 { id:'red-fish', cat:'main', src:'B', photos:['6580','6581'], tags:['fish','stovetop'],
   title:{he:'דג אדום (של יעל)', en:"Red Fish (Yael's Recipe)"},
   ing:{
-   en:['Sliced tomatoes','Whole garlic cloves','Carrot','Chickpeas','Red pepper strips','Fish, washed in water with kosher salt and lemon','1.5 cups boiling water','1 tbsp paprika','1 tbsp salt','1 tsp curcum (turmeric)','Pepper','1 tbsp tomato paste','Herbs (Hebrew word on the card, optional)'],
-   he:['עגבניות פרוסות','שיני שום שלמות','גזר','חומוס (גרגרים)','רצועות פלפל אדום','דג שנשטף במים עם מלח גס ולימון','כוס וחצי מים רותחים','כף פפריקה','כף מלח','כפית כורכום','פלפל','כף רסק עגבניות','עשבי תיבול (כתוב בעברית בכרטיס, לא חובה)']},
+   en:['Sliced tomatoes','Whole garlic cloves','Carrot','Chickpeas','Red pepper strips','Fish, washed in water with kosher salt and lemon','1.5 cups boiling water','1 tsp paprika','1 tsp salt','1 tsp curcum (turmeric)','Pepper','1 tbsp tomato paste','Parsley / cilantro (Hebrew word on the card, optional)'],
+   he:['עגבניות פרוסות','שיני שום שלמות','גזר','חומוס (גרגרים)','רצועות פלפל אדום','דג שנשטף במים עם מלח גס ולימון','כוס וחצי מים רותחים','כפית פפריקה','כפית מלח','כפית כורכום','פלפל','כף רסק עגבניות','פטרוזיליה / כוסברה (כתוב בעברית בכרטיס, לא חובה)']},
   steps:{
    en:['Cook the vegetables on the stove.','Lay the fish over them.','Mix the spices and tomato paste with the water.','Pour the mixture onto the fish.','Cook until very soft.'],
    he:['לבשל את הירקות על הכיריים.','להניח את הדג מעל.','לערבב את התבלינים והרסק עם המים.','לשפוך את התערובת על הדג.','לבשל עד שהכול רך מאוד.']},

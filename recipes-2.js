@@ -8,7 +8,7 @@ window.RECIPES.push(
 
 { id:'yapchik', cat:'side', src:'A', photos:['6562'], tags:['potato','meat','shabbat'], credit:'Jaimee Geller',
   title:{he:'יאפצ\'יק (קוגל תפוחי אדמה עם בשר)', en:'Yapchits (Yapchik)'},
-  ing:{en:['8 large potatoes','1 onion','7 eggs','1 cup water','1/4 cup olive oil','1 tbsp + 1 tsp salt','1.2 pounds meat'], he:['8 תפוחי אדמה גדולים','בצל','7 ביצים','כוס מים','רבע כוס שמן זית','כף + כפית מלח','כ-550 גרם בשר (1.2 פאונד)']},
+  ing:{en:['8 large potatoes','1 onion','7 eggs','1 cup water','1¼ cups olive oil','1 tbsp + 1 tsp salt','1.2 pounds meat'], he:['8 תפוחי אדמה גדולים','בצל','7 ביצים','כוס מים','1¼ כוסות שמן זית','כף + כפית מלח','כ-550 גרם בשר (1.2 פאונד)']},
   steps:{en:['Combine everything in a bowl.','Bake uncovered at 425°F (about 220°C) for 1.5 hours.','Lower the oven to 200° (as written), cover and bake up to 6 more hours.'], he:['לערבב הכול בקערה.','לאפות בלי כיסוי ב-425°F (כ-220°C) שעה וחצי.','להוריד את התנור ל-200° (כך כתוב בכרטיס), לכסות ולאפות עד 6 שעות נוספות.']},
   note:{he:'ה-200° בכרטיס כנראה במעלות צלזיוס; בדקו לפי התנור שלכם.', en:'The 200° on the card is probably Celsius – check against your oven.'} },
 
@@ -45,7 +45,7 @@ window.RECIPES.push(
 
 { id:'cinnamon-buns', cat:'bread', src:'A', photos:['6574'], tags:['yeast','pioneer-woman'], credit:'The Pioneer Woman',
   title:{he:'סינבון (לחמניות קינמון)', en:'Cinnamon Buns'},
-  ing:{en:['DOUGH: 2 cups milk','1/2 cup oil','1/2 cup sugar','0.25 oz yeast','4 cups + 1/2 cup flour','1/2 tsp baking powder (heaping)','1/2 tsp baking soda','1/2 tbsp salt','FILLING: butter, sugar and cinnamon','ICING: 1/2 cup icing sugar + 1/2–1 tbsp milk'], he:['לבצק: 2 כוסות חלב','חצי כוס שמן','חצי כוס סוכר','7 גרם שמרים (0.25 אונקיה)','4 כוסות + חצי כוס קמח','חצי כפית אבקת אפייה (גדושה)','חצי כפית סודה לשתייה','חצי כף מלח','למילוי: חמאה, סוכר וקינמון','לציפוי: חצי כוס אבקת סוכר + חצי עד כף חלב']},
+  ing:{en:['DOUGH: 2 cups milk','1/2 cup oil','1/2 cup sugar','0.25 oz yeast','4 cups + 1/2 cup flour','1/2 tsp baking powder (heaping)','1/2 tsp baking soda','1/2 tbsp salt','FILLING: 1 cup (the card lists "cinnamon, butter"; the method says spread butter and sprinkle sugar + cinnamon)','ICING: 1/2 cup icing sugar + 1/2–1 tbsp milk'], he:['לבצק: 2 כוסות חלב','חצי כוס שמן','חצי כוס סוכר','7 גרם שמרים (0.25 אונקיה)','4 כוסות + חצי כוס קמח','חצי כפית אבקת אפייה (גדושה)','חצי כפית סודה לשתייה','חצי כף מלח','למילוי: כוס אחת (בכרטיס רשום "קינמון, חמאה"; בהוראות: למרוח חמאה ולפזר סוכר וקינמון)','לציפוי: חצי כוס אבקת סוכר + חצי עד כף חלב']},
   steps:{en:['Heat the milk, sugar and oil to just below a boil. Set aside to cool to warm. Sprinkle the yeast on top and let sit 1 minute.','Add 4 cups flour, cover with a towel and let rise 1 hour.','Add 1/2 cup flour, baking powder, baking soda and salt. Use the dough right away, or refrigerate up to 3 days (punch it down if it gets too high).','Roll out the dough, spread with butter and sprinkle sugar and cinnamon. Roll up and cut.','Place in the pan without overcrowding. Cover and let rise 20 minutes.','Bake at 375°F (190°C) 15–17 minutes until golden brown.','Drizzle with the icing.'], he:['לחמם חלב, סוכר ושמן עד מעט לפני רתיחה. להניח להתקרר עד פושר. לפזר את השמרים ולהמתין דקה.','להוסיף 4 כוסות קמח, לכסות במגבת ולהניח לתפוח שעה.','להוסיף חצי כוס קמח, אבקת אפייה, סודה ומלח. אפשר להשתמש בבצק מיד או לשמור במקרר עד 3 ימים (להקפיץ אם תפח יותר מדי).','לרדד את הבצק, למרוח חמאה ולפזר סוכר וקינמון. ללפף ולחתוך.','לסדר בתבנית בלי לדחוס. לכסות ולהניח לתפוח 20 דקות.','לאפות ב-190°C (375°F) 15–17 דקות עד להזהבה.','לטפטף את הציפוי.']},
   tw:[['סינבון אקספרס','quick cinnamon rolls'],['לחמניות קינמון ופקאן','pecan sticky buns']] },
 
@@ -56,7 +56,7 @@ window.RECIPES.push(
 
 { id:'challah-sil', cat:'bread', src:'B', photos:['6635'], tags:['challah','shabbat','yeast'], group:'challah', credit:'Sister-in-law',
   title:{he:'חלה (של הגיסה)', en:"Challah (Sister-in-law's)"},
-  ing:{en:['1.5 cups warm water','3 eggs (beaten)','3/4 cup oil','1/2 cup sugar','6 cups flour','Salt (amount unclear on the card – about 4 tsp)','1.5 tbsp yeast (2 packets)','CINNAMON SUGAR: 1/2 stick margarine, soft','1/2 cup sugar','3/4 cup flour','Cinnamon'], he:['כוס וחצי מים פושרים','3 ביצים טרופות','שלושה רבעי כוס שמן','חצי כוס סוכר','6 כוסות קמח','מלח (הכמות לא ברורה בכרטיס – בערך 4 כפיות)','1.5 כפות שמרים (2 שקיות)','פירורי קינמון: חצי מקל מרגרינה רכה','חצי כוס סוכר','שלושה רבעי כוס קמח','קינמון']},
+  ing:{en:['1.5 cups warm water','3 eggs (beaten)','3/4 cup oil','1/2 cup sugar','6 cups flour','4⅜ tsp salt (as read; handwriting unclear)','1.5 tbsp yeast (2 packets)','CINNAMON SUGAR: 1/2 stick margarine, soft','1/2 cup sugar','3/4 cup flour','Cinnamon'], he:['כוס וחצי מים פושרים','3 ביצים טרופות','שלושה רבעי כוס שמן','חצי כוס סוכר','6 כוסות קמח','4⅜ כפיות מלח (כפי שנקרא; כתב היד לא ברור)','1.5 כפות שמרים (2 שקיות)','פירורי קינמון: חצי מקל מרגרינה רכה','חצי כוס סוכר','שלושה רבעי כוס קמח','קינמון']},
   steps:{en:[],he:[]}, inc:1, note:{he:'כמות המלח לא קריאה בבירור – בדקו מול הצילום.', en:'The amount of salt is hard to read – check the photo.'} },
 
 { id:'challah-allrecipes', cat:'bread', src:'B', photos:['6636'], tags:['challah','shabbat','yeast'], group:'challah', credit:'Allrecipes',
