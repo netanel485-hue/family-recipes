@@ -155,6 +155,7 @@ function card(r){
 }
 function chips(active){
   return `<nav class="chips" aria-label="${esc(t('categories'))}">
+   <button class="chip" data-go="#/plan">${window.Planner.chipLabel()}</button>
    <button class="chip" data-go="#/" ${active==='all'?'aria-current="true"':''}>${t('all')}<span class="count">${R.length}</span></button>
    ${CATS.map(c=>`<button class="chip" data-go="#/c/${c.id}" ${active===c.id?'aria-current="true"':''}>${c.e} ${esc(L(c))}<span class="count">${count(c.id)}</span></button>`).join('')}</nav>`;
 }
@@ -167,7 +168,7 @@ function viewHome(){
       (res.length?`<div class="grid">${res.map(card).join('')}</div>`:`<div class="empty"><b>${t('noRes')}</b>${t('noResHint')}</div>`);
     return;
   }
-  app.innerHTML = chips('all') +
+  app.innerHTML = chips('all') + window.Planner.banner() +
    `<div class="section-title"><h2>${t('categories')}</h2><span>${R.length} ${t('recipes')}</span></div>
     <div class="cats">${CATS.map(c=>`<a class="cat-tile" href="#/c/${c.id}" style="background:var(${c.c})"><span class="e">${c.e}</span><b>${esc(L(c))}</b><small>${count(c.id)} ${t('recipes')}</small></a>`).join('')}</div>
     <div class="section-title"><h2>${t('all')}</h2></div>
@@ -320,6 +321,7 @@ function render(){
   const m = h.match(/^#\/(c|r)\/(.+)$/);
   if(h==='#/fav') viewFavs();
   else if(h==='#/shop') viewShop();
+  else if(h==='#/plan') window.Planner.view();
   else if(m && m[1]==='r') viewRecipe(decodeURIComponent(m[2]));
   else if(m && m[1]==='c') viewCat(decodeURIComponent(m[2]));
   else viewHome();
@@ -355,6 +357,7 @@ lbImg.onclick=()=>lbImg.classList.toggle('zoom');
 document.addEventListener('keydown',e=>{ if(lb.hidden) return; if(e.key==='Escape')closeLB(); if(e.key==='ArrowLeft')$('#lbNext').click(); if(e.key==='ArrowRight')$('#lbPrev').click(); });
 
 /* ---------- start ---------- */
+window.Planner.init({R,CATS,catById,getLang:()=>lang,L,esc,store,toast,scaleIng,fmtQty,MULTS,app});
 setLang(lang);
 
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
