@@ -15,9 +15,8 @@ window.RECIPES.push(
 { id:'matbucha', cat:'starter', src:'A', photos:['6551','6552'], tags:['salad','dip','tomato'],
   title:{he:'מטבוחה', en:'Matbucha (Cooked Tomato Salad)'},
   ing:{
-   en:['10 tomatoes (about 1 kg)','5–6 cloves garlic, crushed','Hot peppers – to be grilled','1/2 cup oil','1 tbsp paprika','2 tbsp sugar','1/4 tsp pepper','1 tsp salt'],
-   he:['10 עגבניות (כקילו)','5–6 שיני שום כתושות','פלפלים חריפים – לצלייה','חצי כוס שמן','כף פפריקה','2 כפות סוכר','רבע כפית פלפל','כפית מלח']},
-  note:{he:'שורת הפלפלים בכרטיס כתובה בעברית ולא קריאה בבירור – נרשם "פלפלים חריפים", בלי כמות. כדאי לוודא מול הצילום.', en:'The peppers line on the card is in hard-to-read Hebrew – entered as "hot peppers", no amount. Please check the photo.'},
+   en:['10 tomatoes (about 1 kg)','5–6 cloves garlic, crushed','Hot pepper – to be grilled','1/2 cup oil','1 tbsp paprika','2 tbsp sugar','1/4 tsp pepper','1 tsp salt'],
+   he:['10 עגבניות (כקילו)','5–6 שיני שום כתושות','פלפל חריף – לצלייה','חצי כוס שמן','כף פפריקה','2 כפות סוכר','רבע כפית פלפל','כפית מלח']},
   steps:{
    en:['Grill the peppers, then let them rest in a bowl covered in plastic wrap.','Cut an X in the bottom of each tomato, place in a bowl, pour boiling water over and wait 5 minutes. Peel and chop.','Lightly sauté the garlic in a pot, then add the tomatoes. When it boils, lower the heat.','Cook about 1 hour, until almost all the liquid has evaporated.','Add the remaining ingredients and cook on low another ~1.5 hours.'],
    he:['לצלות את הפלפלים ולהניח בקערה מכוסה בניילון נצמד.','לחרוץ X בתחתית העגבניות, להניח בקערה, לשפוך מים רותחים ולהמתין 5 דקות. לקלף ולחתוך.','לטגן קלות את השום בסיר, להוסיף את העגבניות. כשמגיע לרתיחה להנמיך אש.','לבשל כשעה, עד שכמעט כל הנוזלים התאדו.','להוסיף את שאר המרכיבים ולבשל על להבה נמוכה עוד כשעה וחצי.']},
