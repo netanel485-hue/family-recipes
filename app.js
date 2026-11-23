@@ -205,6 +205,10 @@ function externalLinks(r){
       const label = he?p[0]:p[1]; const query = he? p[0]+' מתכון' : p[1]+' recipe';
       return `<a href="${esc(g(query))}" target="_blank" rel="noopener noreferrer"><span>${esc(label)}</span><small>↗</small></a>`}).join('')}</div>`;
   }
+  const grp = window.WEB && WEB.groups[WEB.map[r.id]];
+  if(grp){
+    html += `<h2 style="margin-top:18px">⭐ ${he?'מתכונים מדורגים גבוה ברשת':'Highly rated recipes on the web'}</h2><div class="links">${grp.map(p=>`<a href="${esc(p[2])}" target="_blank" rel="noopener noreferrer"><span>${esc(p[0])}</span><small>${esc(p[1])}${p[3]?' · ⭐ '+esc(p[3]):''} ↗</small></a>`).join('')}</div>`;
+  }
   html += `<p class="hint">${t('siteSearchNote')}</p></div>`;
   return html;
 }
