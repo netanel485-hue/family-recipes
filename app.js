@@ -17,7 +17,7 @@ const T = {
  he:{siteName:'מתכוני המשפחה',tagline:'מהמחברת והקלסר – לכל דור',searchPh:'חיפוש מתכון או מרכיב… (עברית או English)',
   surprise:'הפתיעו אותי',favs:'מועדפים',footer:'נבנה באהבה ממתכוני המשפחה · הצילומים הם הכרטיסים המקוריים',
   all:'הכול',recipes:'מתכונים',categories:'קטגוריות',results:'תוצאות',noRes:'לא נמצא כלום',noResHint:'נסו מילה אחרת, או חפשו לפי מרכיב (למשל: שוקולד, chicken, שום).',
-  home:'ראשי',ingredients:'מרכיבים',method:'הוראות הכנה',notes:'הערות',photos:'הכרטיס המקורי',tapZoom:'לחצו על התמונה להגדלה ולבדיקה מול הכתב המקורי.',
+  dishPhoto:'תמונת המנה',addMine:'📷 הוספת/החלפת תמונה שלי',removeMine:'הסרת התמונה שלי',mineNote:'התמונה נשמרת במכשיר הזה בלבד.',stockNote:'תמונה להמחשה – החליפו בצילום שלכם כשתכינו!',photoBy:'צילום',savedPhoto:'התמונה נשמרה',home:'ראשי',ingredients:'מרכיבים',method:'הוראות הכנה',notes:'הערות',photos:'הכרטיס המקורי',tapZoom:'לחצו על התמונה להגדלה ולבדיקה מול הכתב המקורי.',
   incomplete:'בכרטיס המקורי אין הוראות הכנה (או שהן חלקיות) – ראו את הצילום.',
   print:'הדפסה',share:'שיתוף',cook:'מצב בישול',cookOn:'מצב בישול פעיל',fav:'שמירה',faved:'במועדפים',copy:'העתקת מרכיבים',copied:'הועתק!',
   serves:'מנות',credit:'מקור',binderA:'מהמחברת',binderB:'מהקלסר האדום',
@@ -34,7 +34,7 @@ const T = {
  en:{siteName:'Family Recipes',tagline:'From our notebook & binder – for every generation',searchPh:'Search a recipe or ingredient… (English or עברית)',
   surprise:'Surprise me',favs:'Favorites',footer:'Made with love from our family recipes · photos are the original cards',
   all:'All',recipes:'recipes',categories:'Categories',results:'results',noRes:'Nothing found',noResHint:'Try another word, or search by ingredient (e.g. chocolate, עוף, garlic).',
-  home:'Home',ingredients:'Ingredients',method:'Method',notes:'Notes',photos:'Original card',tapZoom:'Tap the photo to enlarge and check against the original handwriting.',
+  dishPhoto:'Dish photo',addMine:'📷 Add / replace my photo',removeMine:'Remove my photo',mineNote:'Saved on this device only.',stockNote:'Illustrative photo – replace it with your own when you cook it!',photoBy:'Photo',savedPhoto:'Photo saved',home:'Home',ingredients:'Ingredients',method:'Method',notes:'Notes',photos:'Original card',tapZoom:'Tap the photo to enlarge and check against the original handwriting.',
   incomplete:'The original card has no (or only a partial) method – see the photo.',
   print:'Print',share:'Share',cook:'Cooking mode',cookOn:'Cooking mode on',fav:'Save',faved:'Saved',copy:'Copy ingredients',copied:'Copied!',
   serves:'Serves',credit:'Source',binderA:'From the notebook',binderB:'From the red binder',
@@ -145,9 +145,35 @@ function saveFavs(){store.set('favs',[...favs]);}
 const count = id => R.filter(r=>r.cat===id).length;
 const srcLabel = r => r.src==='A'?t('binderA'):t('binderB');
 
+
+/* ---------- dish photos: stock (by title) + user's own (IndexedDB, this device) ---------- */
+const UP = {};   // recipe id -> object URL of user photo
+const UDB = {
+  open(){ return new Promise((res,rej)=>{ try{ const q=indexedDB.open('family-recipes',1); q.onupgradeneeded=()=>q.result.createObjectStore('photos'); q.onsuccess=()=>res(q.result); q.onerror=()=>rej(q.error);}catch(e){rej(e)} }); },
+  async all(){ const db=await this.open(); return new Promise((res,rej)=>{ const o={}; const c=db.transaction('photos').objectStore('photos').openCursor(); c.onsuccess=()=>{const x=c.result; if(x){o[x.key]=x.value;x.continue()} else res(o)}; c.onerror=()=>rej(c.error); }); },
+  async put(id,blob){ const db=await this.open(); return new Promise((res,rej)=>{ const tx=db.transaction('photos','readwrite'); tx.objectStore('photos').put(blob,id); tx.oncomplete=res; tx.onerror=()=>rej(tx.error); }); },
+  async del(id){ const db=await this.open(); return new Promise((res,rej)=>{ const tx=db.transaction('photos','readwrite'); tx.objectStore('photos').delete(id); tx.oncomplete=res; tx.onerror=()=>rej(tx.error); }); }
+};
+const stockOf = r => (window.DISH && DISH[r.id]) || null;
+const dishSrc = r => UP[r.id] || (stockOf(r) ? 'img/dish/'+stockOf(r).f+'.jpg' : null);
+function shrink(file,max=1100){ return new Promise((res,rej)=>{ const u=URL.createObjectURL(file); const im=new Image(); im.onload=()=>{ const k=Math.min(1,max/Math.max(im.width,im.height)); const c=document.createElement('canvas'); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k); c.getContext('2d').drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(u); c.toBlob(b=>b?res(b):rej(new Error('blob')),'image/jpeg',0.85); }; im.onerror=()=>rej(new Error('img')); im.src=u; }); }
+function dishPanel(r){
+  const st=stockOf(r), mine=!!UP[r.id], src=dishSrc(r);
+  const cap = mine ? t('mineNote') : (st ? `${t('stockNote')} · ${t('photoBy')}: ${esc(st.by||'Wikimedia')} (<a href="${esc(st.src)}" target="_blank" rel="noopener noreferrer">${esc(st.lic)}</a>)` : '');
+  return `<div class="panel dish-panel" id="dishPanel"><h2>🍽 ${t('dishPhoto')}</h2>${src?`<button class="dish-img" id="dishImg" aria-label="${t('dishPhoto')}"><img src="${src}" alt="${esc(L(r.title))}"></button>`:''}
+   <div class="dish-actions"><label class="btn primary" for="dishFile">${t('addMine')}</label><input id="dishFile" type="file" accept="image/*" hidden>${mine?`<button class="btn" id="dishDel">${t('removeMine')}</button>`:''}</div>
+   ${cap?`<p class="hint">${cap}</p>`:''}</div>`;
+}
+function wireDish(r){
+  const f=$('#dishFile'); if(!f) return;
+  f.onchange=async()=>{ const file=f.files&&f.files[0]; if(!file) return; try{ const b=await shrink(file); await UDB.put(r.id,b); if(UP[r.id]) URL.revokeObjectURL(UP[r.id]); UP[r.id]=URL.createObjectURL(b); toast(t('savedPhoto')); viewRecipe(r.id); }catch(e){ toast('⚠️ '+(e&&e.message||'error')); } };
+  const d=$('#dishDel'); if(d) d.onclick=async()=>{ try{ await UDB.del(r.id);}catch(e){} if(UP[r.id]){URL.revokeObjectURL(UP[r.id]); delete UP[r.id];} viewRecipe(r.id); };
+  const im=$('#dishImg'); if(im) im.onclick=()=>{ currentPhotos=[im.querySelector('img').src]; lbIdx=0; showLB(); };
+}
+
 function card(r){
   const cat=r._cat;
-  const thumb = `<img src="img/${r.photos[0]}.jpg" alt="" loading="lazy"><span class="tile-e">${cat.e}</span>`;
+  const thumb = `<img src="${dishSrc(r)||'img/'+r.photos[0]+'.jpg'}" alt="" loading="lazy"><span class="tile-e">${cat.e}</span>`;
   return `<a class="card" href="#/r/${r.id}">
     <div class="thumb" style="background:var(${cat.c})">${thumb}${favs.has(r.id)?'<span class="fav-dot" aria-hidden="true">♥</span>':''}</div>
     <div class="card-body"><h3>${esc(L(r.title))}</h3>
@@ -277,6 +303,7 @@ function viewRecipe(id){
     <button class="btn" id="shareBtn">↗ ${t('share')}</button>
     <button class="btn" id="printBtn">🖨 ${t('print')}</button>
   </div>
+  ${dishPanel(r)}
   <div class="panel photos-panel photos-top"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="eager"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>
   <div class="detail">
    <div class="col-side">
@@ -296,6 +323,7 @@ function viewRecipe(id){
    </div>
   </div>`;
   window.scrollTo(0,0);
+  wireDish(r);
   // handlers
   $('#favBtn').onclick=()=>{ favs.has(id)?favs.delete(id):favs.add(id); saveFavs(); viewRecipe(id); syncFavBtn(); };
   $('#printBtn').onclick=()=>window.print();
@@ -364,6 +392,7 @@ document.addEventListener('keydown',e=>{ if(lb.hidden) return; if(e.key==='Escap
 /* ---------- start ---------- */
 window.Planner.init({R,CATS,catById,getLang:()=>lang,L,esc,store,toast,scaleIng,fmtQty,MULTS,app});
 setLang(lang);
+UDB.all().then(o=>{ for(const k in o) UP[k]=URL.createObjectURL(o[k]); if(Object.keys(o).length) render(); }).catch(()=>{});
 
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   navigator.serviceWorker.register('sw.js').catch(()=>{});

@@ -203,3 +203,8 @@ body.cooking .ing li,body.cooking .steps li{font-size:21px}
 .tile-e{position:absolute;bottom:8px;inset-inline-start:8px;font-size:22px;background:var(--surface);border-radius:10px;padding:2px 7px;box-shadow:var(--shadow)}
 .thumb{font-size:0}
 .thumb img{object-position:50% 55%}
+.dish-panel .dish-img{display:block;width:100%;max-height:420px;border-radius:14px;overflow:hidden;border:0;padding:0;background:none;cursor:zoom-in}
+.dish-panel .dish-img img{width:100%;max-height:420px;object-fit:cover;display:block}
+.dish-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.dish-actions label.btn{cursor:pointer}
+@media print{.dish-actions{display:none}}
