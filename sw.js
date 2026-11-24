@@ -1,4 +1,4 @@
-const VERSION = 'v12';
+const VERSION = 'v13';
 const CORE = ['./','index.html','style.css','app.js','links.js','dish.js','merge.js','planner.js','recipes-1.js','recipes-2.js','recipes-3.js','manifest.webmanifest','icons/icon.svg','icons/icon-192.png','icons/icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

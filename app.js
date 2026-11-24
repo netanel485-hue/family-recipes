@@ -296,15 +296,18 @@ function viewRecipe(id){
   <div class="hero" style="background:var(${cat.c})"><span class="e">${cat.e}</span><div><h1>${esc(L(r.title))}</h1>
     <div class="meta"><span class="pill">${esc(L(cat))}</span><span class="pill alt">${esc(srcLabel(r))}</span>${serves?`<span class="pill alt">${t('serves')}: ${esc(serves)}</span>`:''}${r.credit?`<span class="pill alt">${t('credit')}: ${esc(r.credit)}</span>`:''}</div></div></div>
   <div class="actions">
-    <button class="btn primary" id="favBtn" aria-pressed="${favs.has(id)}">${favs.has(id)?'♥ '+t('faved'):'♡ '+t('fav')}</button>
+    <button class="btn primary" id="cookBtn" aria-pressed="false">👩‍🍳 ${t('cook')}</button>
+    <button class="btn" id="favBtn" aria-pressed="${favs.has(id)}">${favs.has(id)?'♥ '+t('faved'):'♡ '+t('fav')}</button>
     <button class="btn" id="shopAdd">🛒 ${inCart(id)?t('inShop'):t('addShop')}</button>
-    <button class="btn" id="cookBtn" aria-pressed="false">👩‍🍳 ${t('cook')}</button>
-    <button class="btn" id="copyBtn">📋 ${t('copy')}</button>
-    <button class="btn" id="shareBtn">↗ ${t('share')}</button>
-    <button class="btn" id="printBtn">🖨 ${t('print')}</button>
+    <details class="more"><summary class="btn" aria-label="${lang==='he'?'עוד פעולות':'More actions'}">⋯ ${lang==='he'?'עוד':'More'}</summary>
+      <div class="more-menu">
+        <button class="btn" id="copyBtn">📋 ${t('copy')}</button>
+        <button class="btn" id="shareBtn">↗ ${t('share')}</button>
+        <button class="btn" id="printBtn">🖨 ${t('print')}</button>
+        <a class="btn" href="#photosPanel" id="toCard">📷 ${t('photos')}</a>
+      </div>
+    </details>
   </div>
-  ${dishPanel(r)}
-  <div class="panel photos-panel photos-top"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="eager"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>
   <div class="detail">
    <div class="col-side">
     <div class="panel"><h2>🧺 ${t('ingredients')}</h2>
@@ -321,12 +324,15 @@ function viewRecipe(id){
     ${familyRelated(r)}
     ${externalLinks(r)}
    </div>
-  </div>`;
+  </div>
+  ${dishPanel(r)}
+  <div class="panel photos-panel photos-top" id="photosPanel"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="eager"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>`;
   window.scrollTo(0,0);
   wireDish(r);
   // handlers
   $('#favBtn').onclick=()=>{ favs.has(id)?favs.delete(id):favs.add(id); saveFavs(); viewRecipe(id); syncFavBtn(); };
   $('#printBtn').onclick=()=>window.print();
+  $('#toCard').onclick=e=>{e.preventDefault();$('#photosPanel').scrollIntoView({behavior:'smooth',block:'start'})};
   const scaled=()=>ing.map(x=>scaleIng(x,mult,lang));
   function drawIng(){
     $('#ingList').innerHTML = scaled().map((x,i)=>`<li><input type="checkbox" id="i${i}" data-i="${i}" ${checked.has(i)?'checked':''}><label for="i${i}">${esc(x)}</label></li>`).join('');
@@ -397,4 +403,12 @@ UDB.all().then(o=>{ for(const k in o) UP[k]=URL.createObjectURL(o[k]); if(Object
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
+})();
+
+/* compact header on phones: hide while scrolling down, show on scroll up */
+(function(){let y=0;const h=document.querySelector('.top');
+  addEventListener('scroll',()=>{const c=scrollY;
+    if(innerWidth<700){ if(c>y+4&&c>140) h.classList.add('away'); else if(c<y-4||c<60) h.classList.remove('away'); }
+    else h.classList.remove('away');
+    y=c;},{passive:true});
 })();
