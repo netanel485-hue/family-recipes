@@ -14,7 +14,8 @@ const CATS = [
 ];
 const catById = Object.fromEntries(CATS.map(c=>[c.id,c]));
 const T = {
- he:{siteName:'מתכוני המשפחה',tagline:'מהמחברת והקלסר – לכל דור',searchPh:'חיפוש מתכון או מרכיב… (עברית או English)',
+ he:{siteName:'מתכוני המשפחה',tagline:'מהמחברת והקלסר – לכל דור',searchPh:'חיפוש מתכון או מרכיב',
+  webIdeas:'עוד רעיונות מהרשת',webIdeasN:'קישורים',cardPhoto:'צילום הכרטיס המקורי',
   surprise:'הפתיעו אותי',favs:'מועדפים',footer:'נבנה באהבה ממתכוני המשפחה · הצילומים הם הכרטיסים המקוריים',
   all:'הכול',recipes:'מתכונים',categories:'קטגוריות',results:'תוצאות',noRes:'לא נמצא כלום',noResHint:'נסו מילה אחרת, או חפשו לפי מרכיב (למשל: שוקולד, chicken, שום).',
   dishPhoto:'תמונת המנה',addMine:'📷 הוספת/החלפת תמונה שלי',removeMine:'הסרת התמונה שלי',mineNote:'התמונה נשמרת במכשיר הזה בלבד.',stockNote:'תמונה להמחשה – החליפו בצילום שלכם כשתכינו!',photoBy:'צילום',savedPhoto:'התמונה נשמרה',home:'ראשי',ingredients:'מרכיבים',method:'הוראות הכנה',notes:'הערות',photos:'הכרטיס המקורי',tapZoom:'לחצו על התמונה להגדלה ולבדיקה מול הכתב המקורי.',
@@ -31,7 +32,8 @@ const T = {
   shop:'רשימת קניות',addShop:'הוסיפו לרשימת קניות',inShop:'ברשימה ✓',shopTitle:'רשימת הקניות שלי',
   shopEmpty:'הרשימה ריקה',shopEmptyHint:'בתוך מתכון לחצו על "הוסיפו לרשימת קניות" – הכמויות יתווספו לפי הכמות שבחרתם.',
   copyList:'העתקת הרשימה',clearDone:'הסרת מסומנים',clearAll:'ריקון הרשימה',removeR:'הסרה',added:'נוסף לרשימה',confirmClear:'לרוקן את כל הרשימה?',openR:'פתיחת המתכון'},
- en:{siteName:'Family Recipes',tagline:'From our notebook & binder – for every generation',searchPh:'Search a recipe or ingredient… (English or עברית)',
+ en:{siteName:'Family Recipes',tagline:'From our notebook & binder – for every generation',searchPh:'Search a recipe or ingredient',
+  webIdeas:'More ideas from the web',webIdeasN:'links',cardPhoto:'Photo of the original card',
   surprise:'Surprise me',favs:'Favorites',footer:'Made with love from our family recipes · photos are the original cards',
   all:'All',recipes:'recipes',categories:'Categories',results:'results',noRes:'Nothing found',noResHint:'Try another word, or search by ingredient (e.g. chocolate, עוף, garlic).',
   dishPhoto:'Dish photo',addMine:'📷 Add / replace my photo',removeMine:'Remove my photo',mineNote:'Saved on this device only.',stockNote:'Illustrative photo – replace it with your own when you cook it!',photoBy:'Photo',savedPhoto:'Photo saved',home:'Home',ingredients:'Ingredients',method:'Method',notes:'Notes',photos:'Original card',tapZoom:'Tap the photo to enlarge and check against the original handwriting.',
@@ -136,7 +138,8 @@ function setLang(l){
   $('#langBtn').textContent = l==='he'?'EN':'עב';
   document.querySelectorAll('[data-i18n]').forEach(n=>n.textContent=t(n.dataset.i18n));
   document.querySelectorAll('[data-i18n-ph]').forEach(n=>n.placeholder=t(n.dataset.i18nPh));
-  document.querySelectorAll('[data-i18n-title]').forEach(n=>{n.title=t(n.dataset.i18nTitle)});
+  document.querySelectorAll('[data-i18n-title]').forEach(n=>{n.title=t(n.dataset.i18nTitle); n.setAttribute('aria-label',n.title)});
+  $('#langBtn').setAttribute('aria-label', l==='he'?'English':'עברית');
   document.title = t('siteName')+' · '+(l==='he'?'Family Recipes':'מתכוני המשפחה');
   render();
 }
@@ -157,24 +160,31 @@ const UDB = {
 const stockOf = r => (window.DISH && DISH[r.id]) || null;
 const dishSrc = r => UP[r.id] || (stockOf(r) ? 'img/dish/'+stockOf(r).f+'.jpg' : null);
 function shrink(file,max=1100){ return new Promise((res,rej)=>{ const u=URL.createObjectURL(file); const im=new Image(); im.onload=()=>{ const k=Math.min(1,max/Math.max(im.width,im.height)); const c=document.createElement('canvas'); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k); c.getContext('2d').drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(u); c.toBlob(b=>b?res(b):rej(new Error('blob')),'image/jpeg',0.85); }; im.onerror=()=>rej(new Error('img')); im.src=u; }); }
-function dishPanel(r){
-  const st=stockOf(r), mine=!!UP[r.id], src=dishSrc(r);
-  const cap = mine ? t('mineNote') : (st ? `${t('stockNote')} · ${t('photoBy')}: ${esc(st.by||'Wikimedia')} (<a href="${esc(st.src)}" target="_blank" rel="noopener noreferrer">${esc(st.lic)}</a>)` : '');
-  return `<div class="panel dish-panel" id="dishPanel"><h2>🍽 ${t('dishPhoto')}</h2>${src?`<button class="dish-img" id="dishImg" aria-label="${t('dishPhoto')}"><img src="${src}" alt="${esc(L(r.title))}"></button>`:''}
-   <div class="dish-actions"><label class="btn primary" for="dishFile">${t('addMine')}</label><input id="dishFile" type="file" accept="image/*" hidden>${mine?`<button class="btn" id="dishDel">${t('removeMine')}</button>`:''}</div>
-   ${cap?`<p class="hint">${cap}</p>`:''}</div>`;
+const cardSrcs = r => (r.photos||[]).map(p=>'img/'+p+'.jpg');
+/* hero picture: the dish photo if there is one, otherwise the original handwritten card */
+function heroMedia(r){
+  const st=stockOf(r), mine=!!UP[r.id], dish=dishSrc(r), card0=cardSrcs(r)[0]||null, src=dish||card0;
+  const title=esc(L(r.title));
+  const cap = mine ? t('mineNote')
+    : dish && st ? `${t('stockNote')} · ${t('photoBy')}: ${esc(st.by||'Wikimedia')} (<a href="${esc(st.src)}" target="_blank" rel="noopener noreferrer">${esc(st.lic)}</a>)`
+    : src ? t('cardPhoto') : '';
+  const media = src
+    ? `<button class="hero-img" id="dishImg" aria-label="${dish?t('dishPhoto'):t('cardPhoto')}"><img src="${src}" alt="${dish?title:title+' – '+t('cardPhoto')}" fetchpriority="high"></button>`
+    : `<div class="hero-tile" style="background:var(${r._cat.c})" aria-hidden="true">${r._cat.e}</div>`;
+  return `<figure class="hero-media">${media}<figcaption><span class="cap">${cap}</span><label class="btn quiet" for="dishFile">${t('addMine')}</label><input id="dishFile" type="file" accept="image/*" hidden>${mine?`<button class="btn quiet" id="dishDel">${t('removeMine')}</button>`:''}</figcaption></figure>`;
 }
 function wireDish(r){
   const f=$('#dishFile'); if(!f) return;
   f.onchange=async()=>{ const file=f.files&&f.files[0]; if(!file) return; try{ const b=await shrink(file); await UDB.put(r.id,b); if(UP[r.id]) URL.revokeObjectURL(UP[r.id]); UP[r.id]=URL.createObjectURL(b); toast(t('savedPhoto')); viewRecipe(r.id); }catch(e){ toast('⚠️ '+(e&&e.message||'error')); } };
   const d=$('#dishDel'); if(d) d.onclick=async()=>{ try{ await UDB.del(r.id);}catch(e){} if(UP[r.id]){URL.revokeObjectURL(UP[r.id]); delete UP[r.id];} viewRecipe(r.id); };
-  const im=$('#dishImg'); if(im) im.onclick=()=>{ currentPhotos=[im.querySelector('img').src]; lbIdx=0; showLB(); };
+  // open the hero picture in the lightbox; if it is a dish photo, the original card follows it
+  const im=$('#dishImg'); if(im) im.onclick=()=>{ const d=dishSrc(r); currentPhotos = d ? [d, ...cardSrcs(r)] : cardSrcs(r); openLB(0); };
 }
 
 function card(r){
   const cat=r._cat;
   const ds=dishSrc(r);
-  const thumb = ds ? `<img src="${ds}" alt="" loading="lazy"><span class="tile-e">${cat.e}</span>` : `<span class="tile-big" aria-hidden="true">${cat.e}</span>`;
+  const thumb = ds ? `<img src="${ds}" alt="" loading="lazy">` : `<span class="tile-big" aria-hidden="true">${cat.e}</span>`;
   return `<a class="card" href="#/r/${r.id}">
     <div class="thumb${ds?'':' tile'}" style="background:var(${cat.c})">${thumb}${favs.has(r.id)?'<span class="fav-dot" aria-hidden="true">♥</span>':''}</div>
     <div class="card-body"><h3>${esc(L(r.title))}</h3>
@@ -196,9 +206,7 @@ function viewHome(){
     return;
   }
   app.innerHTML = chips('all') + window.Planner.banner() +
-   `<div class="section-title"><h2>${t('categories')}</h2><span>${R.length} ${t('recipes')}</span></div>
-    <div class="cats">${CATS.map(c=>`<a class="cat-tile" href="#/c/${c.id}" style="background:var(${c.c})"><span class="e">${c.e}</span><b>${esc(L(c))}</b><small>${count(c.id)} ${t('recipes')}</small></a>`).join('')}</div>
-    <div class="section-title"><h2>${t('all')}</h2></div>
+   `<div class="section-title"><h2>${t('all')}</h2><span>${R.length} ${t('recipes')}</span></div>
     <div class="grid">${R.map(card).join('')}</div>`;
 }
 function viewCat(id){
@@ -209,7 +217,7 @@ function viewCat(id){
 }
 function viewFavs(){
   const list=R.filter(r=>favs.has(r.id));
-  app.innerHTML = `<div class="section-title"><h2>♥ ${t('favTitle')}</h2><span>${list.length}</span></div>` +
+  app.innerHTML = `<div class="section-title"><h2>${t('favTitle')}</h2><span>${list.length}</span></div>` +
     (list.length?`<div class="grid">${list.map(card).join('')}</div>`:`<div class="empty"><span class="empty-ic" aria-hidden="true">♡</span><b>${t('favEmpty')}</b>${t('favEmptyHint')}<a class="btn primary" href="#/">${t('all')}</a></div>`);
 }
 
@@ -226,18 +234,20 @@ function externalLinks(r){
   ];
   if(he) items.push(['אתרי מתכונים ישראליים','Mako · Foody · Israel Hayom', g(name+' מתכון site:foody.co.il OR site:mako.co.il OR site:www.bishulim.co.il')]);
   else items.push(['Big recipe sites','Allrecipes · Tasty · NYT Cooking', g(name+' recipe site:allrecipes.com OR site:tasty.co OR site:cooking.nytimes.com')]);
-  let html = `<div class="panel links-panel"><h2>🔗 ${t('similar')}</h2><div class="links">${items.map(i=>`<a href="${esc(i[2])}" target="_blank" rel="noopener noreferrer"><span>${esc(i[0])}</span><small>${esc(i[1])} ↗</small></a>`).join('')}</div>`;
+  let n = items.length + (r.tw?r.tw.length:0);
+  let html = `<h3>${t('similar')}</h3><div class="links">${items.map(i=>`<a href="${esc(i[2])}" target="_blank" rel="noopener noreferrer"><span>${esc(i[0])}</span><small>${esc(i[1])} ↗</small></a>`).join('')}</div>`;
   if(r.tw && r.tw.length){
-    html += `<h2 style="margin-top:18px">✨ ${t('twist')}</h2><div class="links">${r.tw.map(p=>{
+    html += `<h3>${t('twist')}</h3><div class="links">${r.tw.map(p=>{
       const label = he?p[0]:p[1]; const query = he? p[0]+' מתכון' : p[1]+' recipe';
       return `<a href="${esc(g(query))}" target="_blank" rel="noopener noreferrer"><span>${esc(label)}</span><small>↗</small></a>`}).join('')}</div>`;
   }
   const grp = window.WEB && WEB.groups[WEB.map[r.id]];
   if(grp){
-    html += `<h2 style="margin-top:18px">⭐ ${he?'מתכונים מדורגים גבוה ברשת':'Highly rated recipes on the web'}</h2><div class="links">${grp.map(p=>`<a href="${esc(p[2])}" target="_blank" rel="noopener noreferrer"><span>${esc(p[0])}</span><small>${esc(p[1])}${p[3]?' · ⭐ '+esc(p[3]):''} ↗</small></a>`).join('')}</div>`;
+    n += grp.length;
+    html += `<h3>${he?'מתכונים מדורגים גבוה ברשת':'Highly rated recipes on the web'}</h3><div class="links">${grp.map(p=>`<a href="${esc(p[2])}" target="_blank" rel="noopener noreferrer"><span>${esc(p[0])}</span><small>${esc(p[1])}${p[3]?' · ★ '+esc(p[3]):''} ↗</small></a>`).join('')}</div>`;
   }
-  html += `<p class="hint">${t('siteSearchNote')}</p></div>`;
-  return html;
+  html += `<p class="hint">${t('siteSearchNote')}</p>`;
+  return `<details class="panel links-panel"><summary>${t('webIdeas')}<small>${n} ${t('webIdeasN')}</small></summary><div class="links-body">${html}</div></details>`;
 }
 function familyRelated(r){
   const variants = r.group ? R.filter(x=>x.group===r.group && x.id!==r.id) : [];
@@ -248,9 +258,9 @@ function familyRelated(r){
     .filter(p=>p[0]>=1).sort((a,b)=>b[0]-a[0]).slice(0,4).map(p=>p[1]);
   const mini = x=>`<a class="mini" href="#/r/${x.id}" style="background:var(${x._cat.c})"><span class="e">${x._cat.e}</span><b>${esc(L(x.title))}</b></a>`;
   let html='';
-  if(variants.length) html+=`<div class="panel"><h2>👨‍👩‍👧 ${t('variants')}</h2><div class="mini-grid">${variants.map(mini).join('')}</div></div>`;
-  if(sim.length) html+=`<div class="panel"><h2>🏠 ${t('alsoFamily')}</h2><div class="mini-grid">${sim.map(mini).join('')}</div></div>`;
-  return html;
+  if(variants.length) html+=`<div class="panel"><h2>${t('variants')}</h2><div class="mini-grid">${variants.map(mini).join('')}</div></div>`;
+  if(sim.length) html+=`<div class="panel"><h2>${t('alsoFamily')}</h2><div class="mini-grid">${sim.map(mini).join('')}</div></div>`;
+  return html?`<div class="related">${html}</div>`:'';
 }
 
 const MULTS=[[0.5,'½×'],[1,'1×'],[1.5,'1½×'],[2,'2×'],[3,'3×'],[4,'4×']];
@@ -267,8 +277,8 @@ function cartText(){
     return L(r.title)+(c.m!==1?' ('+(MULTS.find(x=>x[0]===c.m)||[0,'×'+c.m])[1]+')':'')+'\n'+ing.map((x,i)=>(c.done.includes(i)?'✓ ':'• ')+scaleIng(x,c.m,lang)).join('\n')}).filter(Boolean).join('\n\n');
 }
 function viewShop(){
-  if(!cart.length){ app.innerHTML=`<div class="section-title"><h2>🛒 ${t('shopTitle')}</h2></div><div class="empty"><span class="empty-ic" aria-hidden="true">🛒</span><b>${t('shopEmpty')}</b>${t('shopEmptyHint')}<a class="btn primary" href="#/">${t('all')}</a></div>`; return; }
-  app.innerHTML = `<div class="section-title"><h2>🛒 ${t('shopTitle')}</h2><span>${cart.length} ${t('recipes')}</span></div>
+  if(!cart.length){ app.innerHTML=`<div class="section-title"><h2>${t('shopTitle')}</h2></div><div class="empty"><span class="empty-ic" aria-hidden="true">🛒</span><b>${t('shopEmpty')}</b>${t('shopEmptyHint')}<a class="btn primary" href="#/">${t('all')}</a></div>`; return; }
+  app.innerHTML = `<div class="section-title"><h2>${t('shopTitle')}</h2><span>${cart.length} ${t('recipes')}</span></div>
    <div class="actions"><button class="btn primary" id="cpList">📋 ${t('copyList')}</button><button class="btn" id="shList">↗ ${t('share')}</button><button class="btn" id="rmDone">${t('clearDone')}</button><button class="btn" id="rmAll">${t('clearAll')}</button></div>
    <div class="shop">${cart.map((c,ci)=>{const r=R.find(x=>x.id===c.id); if(!r) return ''; const ing=r.ing[lang]||r.ing.he;
      return `<div class="panel"><div class="shop-head"><h2>${r._cat.e} ${esc(L(r.title))} ${c.m!==1?`<span class="pill">${(MULTS.find(x=>x[0]===c.m)||[0,'×'+c.m])[1]}</span>`:''}</h2>
@@ -290,11 +300,11 @@ function viewRecipe(id){
   const checked = new Set(store.get('chk:'+id,[]));
   let mult = recipeId===id ? savedMult : 1; recipeId=id; savedMult=mult;
   const serves = r.serves ? (typeof r.serves==='string'?r.serves:L(r.serves)) : '';
-  currentPhotos = r.photos.map(p=>'img/'+p+'.jpg');
+  currentPhotos = cardSrcs(r);
   document.title = L(r.title)+' · '+t('siteName');
   app.innerHTML = `
   <div class="crumbs"><a href="#/">${t('home')}</a> › <a href="#/c/${cat.id}">${esc(L(cat))}</a></div>
-  <div class="hero" style="background:var(${cat.c})"><span class="e">${cat.e}</span><div><h1>${esc(L(r.title))}</h1>
+  <div class="hero">${heroMedia(r)}<div class="hero-text"><h1>${esc(L(r.title))}</h1>
     <div class="meta"><span class="pill">${esc(L(cat))}</span><span class="pill alt">${esc(srcLabel(r))}</span>${serves?`<span class="pill alt">${t('serves')}: ${esc(serves)}</span>`:''}${r.credit?`<span class="pill alt">${t('credit')}: ${esc(r.credit)}</span>`:''}</div></div></div>
   <div class="actions">
     <button class="btn primary" id="cookBtn" aria-pressed="false">👩‍🍳 ${t('cook')}</button>
@@ -311,31 +321,27 @@ function viewRecipe(id){
   </div>
   <div class="detail">
    <div class="col-side">
-    <div class="panel"><h2>🧺 ${t('ingredients')}</h2>
+    <div class="panel"><h2>${t('ingredients')}</h2>
       <div class="scalebar" role="group" aria-label="${esc(t('scale'))}"><span>${t('scale')}:</span>${MULTS.map(x=>`<button data-m="${x[0]}" aria-pressed="${x[0]===mult}">${x[1]}</button>`).join('')}</div>
       <ul class="ing" id="ingList"></ul><p class="hint" id="scaleHint" hidden>${t('scaleNote')}</p></div>
-</div>
    </div>
    <div class="col-main">
-    <div class="panel"><h2>👩‍🍳 ${t('method')}</h2>
+    <div class="panel"><h2>${t('method')}</h2>
       ${steps.length?`<ol class="steps">${steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol>`:''}
-      ${(!steps.length||r.inc)?`<div class="note warn">⚠️ ${t('incomplete')}</div>`:''}
-      ${r.note?`<div class="note">📝 ${esc(L(r.note))}</div>`:''}
+      ${(!steps.length||r.inc)?`<div class="note warn">${t('incomplete')}</div>`:''}
+      ${r.note?`<div class="note">${esc(L(r.note))}</div>`:''}
     </div>
-    ${familyRelated(r)}
-    ${externalLinks(r)}
+    ${currentPhotos.length?`<div class="panel photos-panel" id="photosPanel"><h2>${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="${esc(L(r.title))} – ${t('photos')} ${i+1}" loading="lazy"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>`:''}
    </div>
   </div>
-  <div class="extras">
-  ${dishPanel(r)}
-  <div class="panel photos-panel photos-top" id="photosPanel"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="eager"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>
-  </div>`;
+  ${familyRelated(r)}
+  ${externalLinks(r)}`;
   window.scrollTo(0,0);
   wireDish(r);
   // handlers
   $('#favBtn').onclick=()=>{ favs.has(id)?favs.delete(id):favs.add(id); saveFavs(); viewRecipe(id); syncFavBtn(); };
   $('#printBtn').onclick=()=>window.print();
-  $('#toCard').onclick=e=>{e.preventDefault();$('#photosPanel').scrollIntoView({behavior:'smooth',block:'start'})};
+  $('#toCard').onclick=e=>{e.preventDefault(); const p=$('#photosPanel'); if(p) p.scrollIntoView({behavior:'smooth',block:'start'})};
   const scaled=()=>ing.map(x=>scaleIng(x,mult,lang));
   function drawIng(){
     $('#ingList').innerHTML = scaled().map((x,i)=>`<li><input type="checkbox" id="i${i}" data-i="${i}" ${checked.has(i)?'checked':''}><label for="i${i}">${esc(x)}</label></li>`).join('');
@@ -353,7 +359,7 @@ function viewRecipe(id){
     const on=document.body.classList.toggle('cooking'); e.currentTarget.setAttribute('aria-pressed',on);
     try{ if(on && 'wakeLock' in navigator){wl=await navigator.wakeLock.request('screen'); toast(t('cookOn'))} else if(wl){await wl.release();wl=null} }catch(err){}
   };
-  app.querySelectorAll('[data-photo]').forEach(b=>b.onclick=()=>openLB(+b.dataset.photo));
+  app.querySelectorAll('[data-photo]').forEach(b=>b.onclick=()=>{ currentPhotos=cardSrcs(r); openLB(+b.dataset.photo); });
 }
 
 /* ---------- router ---------- */

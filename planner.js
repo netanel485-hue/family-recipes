@@ -201,9 +201,9 @@ function viewList(){
   const per={}; single.forEach(g=>{const s=g.src[0];(per[s.rid]=per[s.rid]||{t:s.title,l:[]}).l.push({key:s.rid+'|'+s.lineEn,txt:(lg==='he'&&s.lineHe)?s.lineHe:s.lineEn})});
   const ck=k=>st.done.includes(k)?'checked':'';
   let html=`<div class="actions"><button class="btn primary" id="cp">📋 ${pt('copy')}</button><button class="btn" id="sh">↗ ${pt('share')}</button><button class="btn" id="pr">🖨 ${pt('print')}</button><button class="btn" id="un">${pt('uncheck')}</button></div>`;
-  if(merged.length) html+=`<div class="panel"><h2>🧺 ${pt('merged')}</h2><ul class="ing">${merged.map((g,i)=>{const key='m|'+g.name+'|'+g.dim;
+  if(merged.length) html+=`<div class="panel"><h2>${pt('merged')}</h2><ul class="ing">${merged.map((g,i)=>{const key='m|'+g.name+'|'+g.dim;
     return `<li><input type="checkbox" id="mg${i}" data-k="${esc(key)}" ${ck(key)}><label for="mg${i}">${esc(groupText(g,lg))}<small class="src">${pt('fromDishes')}: ${esc(g.src.map(s=>L(s.title)).filter((v,i,a)=>a.indexOf(v)===i).join(' · '))}</small></label></li>`}).join('')}</ul></div>`;
-  html+=`<div class="panel"><h2>🍽 ${pt('perDish')}</h2>${Object.values(per).map((p,pi)=>`<h3 class="dish-h">${esc(L(p.t))}</h3><ul class="ing">${p.l.map((x,i)=>`<li><input type="checkbox" id="p${pi}_${i}" data-k="${esc(x.key)}" ${ck(x.key)}><label for="p${pi}_${i}">${esc(x.txt)}</label></li>`).join('')}</ul>`).join('')}</div>`;
+  html+=`<div class="panel"><h2>${pt('perDish')}</h2>${Object.values(per).map((p,pi)=>`<h3 class="dish-h">${esc(L(p.t))}</h3><ul class="ing">${p.l.map((x,i)=>`<li><input type="checkbox" id="p${pi}_${i}" data-k="${esc(x.key)}" ${ck(x.key)}><label for="p${pi}_${i}">${esc(x.txt)}</label></li>`).join('')}</ul>`).join('')}</div>`;
   html+=`<p class="hint">${pt('listNote')}</p>`;
   body.innerHTML=html;
   body.querySelectorAll('input[data-k]').forEach(cb=>cb.onchange=()=>{const k=cb.dataset.k; st.done=st.done.filter(x=>x!==k); if(cb.checked) st.done.push(k); save()});
