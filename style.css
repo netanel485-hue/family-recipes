@@ -7,7 +7,9 @@
   --bg:#fbf6ee; --surface:#ffffff; --ink:#2b2420; --muted:#6b5f57; --line:#eadfd0;
   --accent:#a8321f; --accent-ink:#ffffff; --accent-soft:#f6e1da; --gold:#c98a2b;
   --c-starter:#e9efe0; --c-main:#f6e1da; --c-side:#f3ead2; --c-bread:#f4e4cf; --c-breakfast:#fbe9c8;
-  --c-cake:#efdcec; --c-cookie:#eadfcf; --c-sweet:#e3d5d0; --c-sauce:#dfe9ea;
+  --c-cake:#efdcec; --c-cookie:#eadfcf; --c-sweet:#e3d5d0; --c-sauce:#dfe9ea; --c-kids:#e2ecf6;
+  /* kashrut labels */
+  --k-dairy:#1f5f9e; --k-dairy-bg:#e1ecf8; --k-meat:#a8321f; --k-meat-bg:#f6e1da; --k-pareve:#2f6b3a; --k-pareve-bg:#e3efe2;
   /* elevation: only recipe cards and floating menus get a shadow */
   --shadow:0 1px 2px rgba(60,35,20,.08),0 6px 18px rgba(60,35,20,.07);
   /* type */
@@ -28,7 +30,8 @@
   --accent:#e0745e; --accent-ink:#1c1816; --accent-soft:#3a2420; --gold:#e6b04f;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.3);
   --c-starter:#2a3224; --c-main:#3a2420; --c-side:#352f1f; --c-bread:#37291d; --c-breakfast:#3b3120;
-  --c-cake:#35243a; --c-cookie:#30291f; --c-sweet:#302522; --c-sauce:#202d30;
+  --c-cake:#35243a; --c-cookie:#30291f; --c-sweet:#302522; --c-sauce:#202d30; --c-kids:#1f2a36;
+  --k-dairy:#8fbdf0; --k-dairy-bg:#1d2b3b; --k-meat:#f09a87; --k-meat-bg:#3a2420; --k-pareve:#9ed3a3; --k-pareve-bg:#1f3022;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -36,7 +39,8 @@
     --accent:#e0745e; --accent-ink:#1c1816; --accent-soft:#3a2420; --gold:#e6b04f;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.3);
     --c-starter:#2a3224; --c-main:#3a2420; --c-side:#352f1f; --c-bread:#37291d; --c-breakfast:#3b3120;
-    --c-cake:#35243a; --c-cookie:#30291f; --c-sweet:#302522; --c-sauce:#202d30;
+    --c-cake:#35243a; --c-cookie:#30291f; --c-sweet:#302522; --c-sauce:#202d30; --c-kids:#1f2a36;
+    --k-dairy:#8fbdf0; --k-dairy-bg:#1d2b3b; --k-meat:#f09a87; --k-meat-bg:#3a2420; --k-pareve:#9ed3a3; --k-pareve-bg:#1f3022;
   }
 }
 
@@ -278,6 +282,19 @@ body.cooking .ing li,body.cooking .steps li{font-size:21px}
   .brand-text small{display:none}
   .panel{padding:14px}
 }
+
+/* ---------- kids' kitchen ---------- */
+.pill.k-dairy{background:var(--k-dairy-bg);color:var(--k-dairy)}
+.pill.k-meat{background:var(--k-meat-bg);color:var(--k-meat)}
+.pill.k-pareve{background:var(--k-pareve-bg);color:var(--k-pareve)}
+.kids-banner{background:var(--c-kids);border-color:color-mix(in srgb,var(--k-dairy) 25%,transparent)}
+.kids-intro{margin:0 0 var(--sp-3);color:var(--muted);max-width:68ch}
+.age-filter{display:flex;flex-wrap:wrap;gap:var(--sp-2);margin-bottom:var(--sp-3)}
+.age-filter .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.kids-note{margin:0 0 var(--sp-4);background:color-mix(in srgb,var(--gold) 16%,var(--surface))}
+.panel .kids-note{margin:var(--sp-3) 0 0}
+.steps li.adult-step{background:color-mix(in srgb,var(--gold) 13%,transparent);border-radius:var(--r-md);padding-inline:var(--sp-2);margin-inline:calc(var(--sp-2) * -1)}
+.kids-inspo{margin-top:var(--sp-4)}
 
 /* ---------- header SVG icons, empty states, view transition (design pass 3) ---------- */
 .ic{display:block;margin:auto}
