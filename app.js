@@ -173,9 +173,10 @@ function wireDish(r){
 
 function card(r){
   const cat=r._cat;
-  const thumb = `<img src="${dishSrc(r)||'img/'+r.photos[0]+'.jpg'}" alt="" loading="lazy"><span class="tile-e">${cat.e}</span>`;
+  const ds=dishSrc(r);
+  const thumb = ds ? `<img src="${ds}" alt="" loading="lazy"><span class="tile-e">${cat.e}</span>` : `<span class="tile-big" aria-hidden="true">${cat.e}</span>`;
   return `<a class="card" href="#/r/${r.id}">
-    <div class="thumb" style="background:var(${cat.c})">${thumb}${favs.has(r.id)?'<span class="fav-dot" aria-hidden="true">♥</span>':''}</div>
+    <div class="thumb${ds?'':' tile'}" style="background:var(${cat.c})">${thumb}${favs.has(r.id)?'<span class="fav-dot" aria-hidden="true">♥</span>':''}</div>
     <div class="card-body"><h3>${esc(L(r.title))}</h3>
     <div class="meta"><span class="pill">${esc(L(cat))}</span><span class="pill alt">${esc(srcLabel(r))}</span>${r.inc?'':''}</div></div></a>`;
 }
@@ -325,8 +326,10 @@ function viewRecipe(id){
     ${externalLinks(r)}
    </div>
   </div>
+  <div class="extras">
   ${dishPanel(r)}
-  <div class="panel photos-panel photos-top" id="photosPanel"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="eager"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>`;
+  <div class="panel photos-panel photos-top" id="photosPanel"><h2>📷 ${t('photos')}</h2><div class="photos">${currentPhotos.map((p,i)=>`<button data-photo="${i}" aria-label="${t('photos')} ${i+1}"><img src="${p}" alt="" loading="eager"></button>`).join('')}</div><p class="hint">${t('tapZoom')}</p></div>
+  </div>`;
   window.scrollTo(0,0);
   wireDish(r);
   // handlers
