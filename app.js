@@ -192,7 +192,7 @@ function viewHome(){
   if(q.trim()){
     const res=search(q);
     app.innerHTML = chips('all') + `<div class="section-title"><h2>${res.length} ${t('results')}</h2><button class="btn" id="clr">${t('clear')}</button></div>` +
-      (res.length?`<div class="grid">${res.map(card).join('')}</div>`:`<div class="empty"><b>${t('noRes')}</b>${t('noResHint')}</div>`);
+      (res.length?`<div class="grid">${res.map(card).join('')}</div>`:`<div class="empty"><span class="empty-ic" aria-hidden="true">🔍</span><b>${t('noRes')}</b>${t('noResHint')}</div>`);
     return;
   }
   app.innerHTML = chips('all') + window.Planner.banner() +
@@ -205,12 +205,12 @@ function viewCat(id){
   const c=catById[id]; if(!c) return viewHome();
   const list = (q.trim()?search(q):R).filter(r=>r.cat===id);
   app.innerHTML = chips(id) + `<div class="section-title"><h2>${c.e} ${esc(L(c))}</h2><span>${list.length} ${t('recipes')}</span></div>` +
-    (list.length?`<div class="grid">${list.map(card).join('')}</div>`:`<div class="empty"><b>${t('noRes')}</b>${t('noResHint')}</div>`);
+    (list.length?`<div class="grid">${list.map(card).join('')}</div>`:`<div class="empty"><span class="empty-ic" aria-hidden="true">🔍</span><b>${t('noRes')}</b>${t('noResHint')}</div>`);
 }
 function viewFavs(){
   const list=R.filter(r=>favs.has(r.id));
   app.innerHTML = `<div class="section-title"><h2>♥ ${t('favTitle')}</h2><span>${list.length}</span></div>` +
-    (list.length?`<div class="grid">${list.map(card).join('')}</div>`:`<div class="empty"><b>${t('favEmpty')}</b>${t('favEmptyHint')}</div>`);
+    (list.length?`<div class="grid">${list.map(card).join('')}</div>`:`<div class="empty"><span class="empty-ic" aria-hidden="true">♡</span><b>${t('favEmpty')}</b>${t('favEmptyHint')}<a class="btn primary" href="#/">${t('all')}</a></div>`);
 }
 
 function externalLinks(r){
@@ -267,7 +267,7 @@ function cartText(){
     return L(r.title)+(c.m!==1?' ('+(MULTS.find(x=>x[0]===c.m)||[0,'×'+c.m])[1]+')':'')+'\n'+ing.map((x,i)=>(c.done.includes(i)?'✓ ':'• ')+scaleIng(x,c.m,lang)).join('\n')}).filter(Boolean).join('\n\n');
 }
 function viewShop(){
-  if(!cart.length){ app.innerHTML=`<div class="section-title"><h2>🛒 ${t('shopTitle')}</h2></div><div class="empty"><b>${t('shopEmpty')}</b>${t('shopEmptyHint')}</div>`; return; }
+  if(!cart.length){ app.innerHTML=`<div class="section-title"><h2>🛒 ${t('shopTitle')}</h2></div><div class="empty"><span class="empty-ic" aria-hidden="true">🛒</span><b>${t('shopEmpty')}</b>${t('shopEmptyHint')}<a class="btn primary" href="#/">${t('all')}</a></div>`; return; }
   app.innerHTML = `<div class="section-title"><h2>🛒 ${t('shopTitle')}</h2><span>${cart.length} ${t('recipes')}</span></div>
    <div class="actions"><button class="btn primary" id="cpList">📋 ${t('copyList')}</button><button class="btn" id="shList">↗ ${t('share')}</button><button class="btn" id="rmDone">${t('clearDone')}</button><button class="btn" id="rmAll">${t('clearAll')}</button></div>
    <div class="shop">${cart.map((c,ci)=>{const r=R.find(x=>x.id===c.id); if(!r) return ''; const ing=r.ing[lang]||r.ing.he;
@@ -359,6 +359,7 @@ function viewRecipe(id){
 /* ---------- router ---------- */
 function render(){
   document.body.classList.remove('cooking');
+  app.classList.remove('enter'); void app.offsetWidth; app.classList.add('enter');
   const h = location.hash || '#/';
   const m = h.match(/^#\/(c|r)\/(.+)$/);
   if(h==='#/fav') viewFavs();
@@ -370,7 +371,7 @@ function render(){
   if(!(m&&m[1]==='r')) document.title = t('siteName')+' · '+(lang==='he'?'Family Recipes':'מתכוני המשפחה');
   syncFavBtn(); syncShopBtn();
 }
-function syncFavBtn(){const b=$('#favToggle'); const on=location.hash==='#/fav'; b.setAttribute('aria-pressed',on); b.textContent = favs.size?'♥':'♡'}
+function syncFavBtn(){const b=$('#favToggle'); const on=location.hash==='#/fav'; b.setAttribute('aria-pressed',on); b.classList.toggle('has',favs.size>0)}
 
 document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]'); if(g){ e.preventDefault(); location.hash=g.dataset.go; }
